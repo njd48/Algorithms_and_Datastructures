@@ -123,6 +123,174 @@ void gnomeSort( std::vector<int>& x ){
     }
 }
 
+void insertionSort( std::vector<int>& x ) {
+    int N = x.size();
+
+    int j;
+    int temp ;
+
+    for ( int i = 1 ; i < N ; i++ ) {
+        j = i-1;
+        temp = x[i];
+        while (j>=0 && x[j] > temp) {
+            x[j+1] = x[j];
+            j--;
+        }
+        x[j+1] = temp;
+    }
+}
+
+//------------------------------------------------------------------------------------------
+// Funcs for quicksort
+//
+    //------------------------------------------------------------------------------------------
+    // partial sorts for supplement with quickSort Sort
+    //
+    void partCocktailSort( int N, int S, std::vector<int>& x ) {
+
+        //int N = x.size();
+
+        if ( N== 1){
+            return;
+        }
+
+        int held   = x[0+S];
+        int i_held = 0+S;
+        int i  = 1+S;
+        int iL = 0+S;
+        int iR = N+S;
+
+        // Sweep forward, find largest
+        // Sweep Backward, find smallest
+        while ( iL < iR ) {
+            
+            held   = x[iL];
+            i_held = iL; 
+            // Upsweep
+            for ( i = iL ;  i < iR ;  i++ ) {
+                if ( x[i] > held ) {
+                    held   = x[i];
+                    i_held = i;
+                }
+            }
+            x[i_held]  = x[iR-1];
+            x[iR-1]    = held;
+            iR--;
+
+            //std::cout << "\t#  \t\t";
+            //printV(x);
+
+            if (iR<=iL){
+                return;
+            }
+            // Downsweep
+            i_held = iR-1;
+            held   = x[i_held];
+            for ( i = iR-1 ;  i>=iL ;  i-- ) {
+                if (x[i] < held) {
+                    held   = x[i];
+                    i_held = i;
+                }
+            }
+            x[i_held] = x[iL];
+            x[iL]     = held;
+            iL++;
+
+            //std::cout << "\t#  \t\t";
+            //printV(x);
+        }
+
+    }
+    void partInsertionSort( int N, int S, std::vector<int>& x ) {
+        // int N = x.size();
+
+        int j;
+        int temp ;
+
+        for ( int i = S+1 ; i < N ; i++ ) {
+            j = i-1;
+            temp = x[i];
+            while (j>=0 && x[j] > temp) {
+                x[j+1] = x[j];
+                j--;
+            }
+            x[j+1] = temp;
+        }
+    }
+    //---------------------------------------------------------------------------
+
+int pickPivot( int L, int R, std::vector<int>& x  ){
+    // Pivot is start val
+    int P = x[L];
+    return P;
+}
+int partitionQS( int L, int R, std::vector<int>& x  ) {
+
+    // Algorithm:
+    // - pick pivot, 
+    // - move values by swapping across the pivot
+    // - identify the index which divides the array into 
+    //   low and high values and return it
+
+    int i = L;
+    int j = R-1;
+    int P = pickPivot( L, R, x );
+    //std::cout << '\t' << "P=" << P << '\n';
+    int temp;
+
+    while ( true ) {
+
+        while( x[i] < P ){ i++; }
+
+        while( x[j] > P ){ j--; }
+
+        if (i>=j) {
+            return j+1;
+        }
+
+        temp = x[i];
+        x[i] = x[j];
+        x[j] = temp;
+
+        i++;
+        j--;
+    }
+   
+}
+void partialQuickSort( int L, int R, std::vector<int>& x, void (*subSort)(int, int, std::vector<int>& ) )  {
+
+    int N = R-L;
+
+    // Early returns
+    if (N <= 1) {
+        return;
+    } else if ( N <= 3 ){
+        // Pass to a smaller sort for small arrays
+        subSort( N, L, x );
+    }
+ 
+    int J = partitionQS( L, R, x );
+
+    partialQuickSort( L, J, x, subSort );
+    partialQuickSort( J, R, x, subSort );   
+   
+}
+void quickSort( std::vector<int>& x, char subsort ) {
+
+    switch (subsort)
+    {
+        case 'i':
+            partialQuickSort(  0, (int)x.size(), x , &partInsertionSort );
+            return;
+        case 'c':
+            partialQuickSort(  0, (int)x.size(), x , &partCocktailSort );
+            return;
+        default :
+            std::cout << "Error: subroutine choice, " << subsort << ", is not programmed.\n";
+            return;
+    }
+}
+
 //------------------------------------------------------------------------------------------
 // Funcs for mergesort
 //
@@ -323,61 +491,97 @@ double testPerformanceCocktail( int N ) {
     return average_time;
 
 }
+double testPerformanceInsertion( int N ) {
 
+    int n_tests = 64; 
+
+    std::vector<double> walltime(n_tests);
+    std::vector<int> arr(N);
+
+    clock_t   start_time;
+    clock_t     end_time;
+    double  average_time;
+
+    for ( int i = 0; i < n_tests ; i++ ) {
+        // Form random int array
+        for (int j = 0 ; j < N ; j++ ){
+            arr[j] = ( rand()%100 ); // rand int between 0 and 99;
+        }
+        
+        start_time = clock();
+        insertionSort( arr );
+        end_time   = clock();
+
+        // average time in seconds
+        walltime[i] = ((double)(end_time - start_time))/CLOCKS_PER_SEC;
+
+        average_time = average_time + walltime[i];
+        
+    }
+
+    // Compute average
+    average_time = average_time/n_tests;
+    return average_time;
+
+}
+double testPerformanceQuick( int N, char subsort ) {
+
+    int n_tests = 64; 
+
+    std::vector<double> walltime(n_tests);
+    std::vector<int> arr(N);
+
+    clock_t   start_time;
+    clock_t     end_time;
+    double  average_time;
+
+    for ( int i = 0; i < n_tests ; i++ ) {
+        // Form random int array
+        for (int j = 0 ; j < N ; j++ ){
+            arr[j] = ( rand()%100 ); // rand int between 0 and 99;
+        }
+        
+        start_time = clock();
+        quickSort( arr, subsort );
+        end_time   = clock();
+
+        // average time in seconds
+        walltime[i] = ((double)(end_time - start_time))/CLOCKS_PER_SEC;
+
+        average_time = average_time + walltime[i];
+        
+    }
+
+    // Compute average
+    average_time = average_time/n_tests;
+    return average_time;
+
+}
 
 
 int main() {
-
-/*
+   
     //---------------------------------------------------------------
-    // Test gnomeSort() function 
-    //
-    std::cout << "test gnomeSort(): \n";
-    
-    std::vector x1 = { 1, 8, 6 };
-    //std::cout << "here in main\n";
-    runATest_sort( x1 ) ;
-
-    std::vector x2 = { 6, 8, 1, 7, 3, 1, 5, 9, 2, 3, 1 };
-    runATest_sort( x2 ) ;
-
-
-*/
-    //---------------------------------------------------------------
-    // Test cocktailSort() function 
-    //
-    std::cout << "test cocktailSort(): \n";
-    
-    std::vector x1 = { 1, 8, 6 };
-    runATest_sort( x1 ) ;
-
-    std::vector x2 = { 6, 8, 1, 7, 3, 1, 5, 9, 2, 3, 1 };
-    runATest_sort( x2 ) ;
-
-    std::vector x3 = { 64, 8, 12, 7, 3, 1 };
-    runATest_sort( x3 ) ;
-
-    std::vector x4 = { 6, 3, 7, 8, 3, 55, 3 ,3, 1 };
-    runATest_sort( x4 ) ;
-
-    
-    //---------------------------------------------------------------
-    // time performance of mergeSort() and gnomeSort() and cocktailSort
+    // time performance of many sorts
     //
 
     std::cout << "time performance of mergeSort() and gnomeSort() and cocktailSort(): \n";
 
     int NN;
-    std::cout << "-------------------------------------------------------------------\n";
-    std::cout << "           " << '\t' << "|  mergeSort() " << '\t' << "|  gnomeSort() " << '\t' << "|cocktailSort()" << "\t|\n";
-    std::cout << " array size" << '\t' << "| avg wall time" << '\t' << "| avg wall time" << '\t' << "| avg wall time" << "\t|\n";
-    std::cout << "         N " << '\t' << "|    t (s)     " << '\t' << "|    t (s)     " << '\t' << "|    t (s)     " << "\t|\n";
-    std::cout << "-------------------------------------------------------------------\n";
-    for ( double EE = 5; EE < 17; EE += 1 ){ 
+    std::cout << "----------------------------------------------------------------------------------------------------------\n";
+    std::cout << "           " << '\t' << "|              " << '\t' << "| insert N<3   " << '\t' << "|              " << '\t' << "|              " << '\t' << "|               " << "|\n";
+    std::cout << "           " << '\t' << "|  mergeSort() " << '\t' << "|  quickSort() " << '\t' << "|  gnomeSort() " << '\t' << "|cocktailSort()" << '\t' << "|insertionSort()" << "|\n";
+    std::cout << " array size" << '\t' << "| avg wall time" << '\t' << "| avg wall time" << '\t' << "| avg wall time" << '\t' << "| avg wall time" << '\t' << "| avg wall time" << "\t|\n";
+    std::cout << "         N " << '\t' << "|    t (s)     " << '\t' << "|    t (s)     " << '\t' << "|    t (s)     " << '\t' << "|    t (s)     " << '\t' << "|    t (s)     " << "\t|\n";
+    std::cout << "----------------------------------------------------------------------------------------------------------\n";
+    for ( double EE = 3; EE < 7; EE += 0.2 ){ 
         NN = (int)( pow( 2.0, EE ) );
         std::cout << '\t' << NN << "\t| " << testPerformanceMerge( NN ) << "\t| "
+                                     << testPerformanceQuick( NN, 'i' ) << "\t| "
                                           << testPerformanceGnome( NN ) << "\t| "
-                                       << testPerformanceCocktail( NN ) << "\t| \n";
+                                       << testPerformanceCocktail( NN ) << "\t| "
+                                      << testPerformanceInsertion( NN ) << "\t| "
+                                                                        << '\n' ;
     } 
     
 }
