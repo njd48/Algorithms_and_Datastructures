@@ -52,5 +52,6 @@
         "chrono": "cpp",
         "ratio": "cpp",
         "cstring": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
