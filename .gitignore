@@ -7,6 +7,9 @@
 *.o
 *.obj
 
+# matlab temp files
+*.asv
+
 # Precompiled Headers
 *.gch
 *.pch
