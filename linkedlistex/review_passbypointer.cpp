@@ -91,7 +91,7 @@ int main()
     nullify_ptr( p );
     std::cout << "2: " << *p << '\n';
     nullify_byref( p );
-    std::cout << "3: " << *p << '\n';
+    std::cout << "3: " << *p << '\n'; // <-- segmentation fault 
 
 
     return 0;

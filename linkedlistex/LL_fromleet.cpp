@@ -112,9 +112,12 @@ ListNode* listCreate( std::vector<int> x ){
                 nodeAppend(current, temp);
                 current = current->next;
             } 
-            
-            
         }
+        // Append last value
+        if (carry > 0 ) {
+            nodeAppend(current, carry);            
+        }
+
 
         return outhead;
     }
