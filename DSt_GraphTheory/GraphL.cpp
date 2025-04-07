@@ -3,6 +3,15 @@
 #ifndef GRAPHL_H
 #define GRAPHL_H
 
+enum Color  // establishes symbolic constants
+{             
+    red, 
+    green, 
+    blue,
+};
+
+// Implements Graphs with adjacency lists
+
 // #include <matrix.cpp>
 #include <vector>
 #include "mylinklist.cpp"
