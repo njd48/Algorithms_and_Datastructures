@@ -46,7 +46,7 @@ std::vector<double> BreadthFirstSearch( Graph& G, int s ) {
 
     assert ( s < V );
 
-    // Set em up
+    // Set 'em all up
     for ( int u = 0 ; u < V ; u++ ) {   
         if( u != s ) 
         {
