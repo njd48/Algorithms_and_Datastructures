@@ -214,11 +214,11 @@ int main() {
 
     printf("\n");
     printf("  preliminary checks:\n" );
-    printf("\tsize of short:  %lu \n", sizeof(short)   );
-    printf("\tsize of int:    %lu \n", sizeof(int)     );
-    printf("\tsize of long:   %lu \n", sizeof(long)     );
-    printf("\tsize of float:  %lu \n", sizeof(float)   );
-    printf("\tsize of double: %lu \n", sizeof(double)  );
+    printf("\tsize of short:  %lu bits \n", 8*sizeof(short)   );
+    printf("\tsize of int:    %lu bits \n", 8*sizeof(int)     );
+    printf("\tsize of long:   %lu bits \n", 8*sizeof(long)     );
+    printf("\tsize of float:  %lu bits \n", 8*sizeof(float)   );
+    printf("\tsize of double: %lu bits \n", 8*sizeof(double)  );
     printf("\n");
 
     // Set up tables to check evaluations
