@@ -3,251 +3,262 @@
 #ifndef BINTREE_H
 #define BINTREE_H
 
+#define LARGE_INT  2147483647
+#define SMALL_INT -2147483648
+
 #include <iostream>
 
+//-------------------------------------------------------------------------------------
+// Struct Defn
+//-------------------------------------------------------------------------------------
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode* parent;
 
-
-template <class T>
-class BinTree { 
-
-    protected: 
-        struct node {
-            T key;
-            struct node *left;
-            struct node *right;
-            struct node *parent;
-
-            void walk(  ){
-                if ( left != nullptr ) {
-                    left->walk();
-                }
-                std::cout << key << ' ';
-            
-                if ( right != nullptr ) {
-                    right->walk();
-                }
-                //std::cout << "here3\n";
-            };
-            void killChildren() {
-                if ( left != nullptr ) {
-                    left->killChildren();
-                    delete left;
-                }            
-                if ( right != nullptr ) {
-                    right->killChildren();
-                    delete right;
-                }
-            }
-        };
-        typedef struct node *NODEPTR;
-        NODEPTR root;  // Points to first node
-
-    public:
-        int size;
-
-        BinTree();
-        bool isEmpty();
-        ~BinTree();
-
-        
-        void insert( T val );
-        void* search( T val );
-        //void* successor( T val );
-        //void remove( T val );
-
-        
-        /*
-        minimum();
-        maximum();
-
-        
-        predecessor();
-        
-        search( T val );        
-        */
-
-        
-        // void display();
-        void list();
+    TreeNode() : val( 0 ), left(nullptr), right(nullptr), parent(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr), parent(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right), parent(nullptr) {}
 };
 
+//-------------------------------------------------------------------------------------
+// Basic Bin Tree Methods 
+//-------------------------------------------------------------------------------------
+void treeInsert( TreeNode*& root , int x ) {
 
-template <class T>
-BinTree<T>::BinTree() {
-    size = 0;
-    root = nullptr;
-}
-
-template <class T>
-bool BinTree<T>::isEmpty() {
-    if (root == nullptr) {return true; } else { return false; }
-}
-
-template <class T>
-BinTree<T>::~BinTree() {
-
-    if (!isEmpty()) {
-        
-        root->killChildren();
-        delete root;
-    }
-}
-
-template <class T>
-void BinTree<T>::insert( T val ) {
-
-    if ( isEmpty() ) {
-        root = new node;
-        
-        root->key = val;
-        root->left = nullptr;
-        root->right = nullptr;
-        size++;
-        return;
-    } //--------
-
-    NODEPTR p = root;
-    NODEPTR q;
-    bool found = false;
-    bool L;
-
-    while (!found) {
-
-        if ( val == p->key ) {
-            //std::cout << "warning: value, " << val << " is already in the tree. Nothing happened.\n";
-            return;
-        } 
-
-        if ( val < p->key ){
-            if (p->left == nullptr) {
-
-                found = true;
-                q = new node;
-                q->left  = nullptr;
-                q->right  = nullptr;
-
-                p->left = q;
-
-            } else if ( val > (p->left)->key ) {
-
-                found = true;
-                q = new node;
-                q->left  = p->left;
-                q->right = nullptr;
-
-                p->left = q;
-                
-            } else {
-                p = p->left;
-            }        
-
-        } else {
-            if (p->right == nullptr) {
-                found = true;
-                q = new node;
-                q->left  = nullptr;
-                q->right = nullptr;
-
-                p->right = q;
-                
-            } else if ( val < (p->right)->key ) {
-                found = true;
-                q = new node;
-                q->right = p->right;
-                q->left  = nullptr;
-
-                p->right = q;
-            } else {
-                p = p->right;
-            }
-        }
-    }
     
-    q->key = val;
-
-    size++;
-}
-
-template <class T>
-void* BinTree<T>::search( T val ) {
-
-    if (isEmpty()) {
-        return nullptr;
+    if (root==nullptr) { // Tree was empty 
+        //std::cout <<"insr1\n";
+        root = new TreeNode;
+        root->val = x;
+        return;
     }
 
-    NODEPTR p = root;
+    //std::cout <<"insr2\n";
 
-    while (p!=nullptr) {
-        if ( val == p->key ){
-            return p;
-        } else if (val < p->key ){
+    TreeNode* p = root;
+    TreeNode* q = nullptr;
+
+    while ( p != nullptr ) {
+        q = p;
+        if ( x == p->val ){
+            std::cout << "error: node val, " << x << ", is already in the tree.\n";
+            return;
+        } else if ( x < p->val ) {
             p = p->left;
         } else {
             p = p->right;
         }
     }
+
+    p = new TreeNode;    
+    p->val = x;
+    p->parent = q;
+
+    if ( x < q->val ) { 
+        q->left = p; 
+    } else {
+        q->right = p;
+    }
+    
+
+    //TreeNode(x);
+}
+TreeNode* treeSearch( TreeNode* root, int x) {
+
+    if (root == nullptr) { 
+        return nullptr; 
+    }
+
+    if ( x == root->val ) {
+        return root;
+    } else if ( x < root->val ){
+        return treeSearch( root->left, x);
+    } else {
+        return treeSearch( root->right, x);
+    }
+}
+TreeNode* treeMin( TreeNode* root ){
+
+    //if ( root == nullptr ){
+    //    int m = LARGE_INT;
+    //    return m;
+    //}
+
+    TreeNode* q = nullptr; 
+    TreeNode* p = root;
+
+    while( p != nullptr ){
+        q = p;
+        p = p->left;
+    }
+    return q;
+    
+}
+TreeNode* treeMax( TreeNode* root ){
+
+    //if ( root == nullptr ){
+    //    int m = SMALL_INT;
+    //    return m;
+    //}
+
+    TreeNode* q = nullptr; 
+    TreeNode* p = root;
+
+    while( p != nullptr ){
+        q = p;
+        p = p->right;
+    }
+    return q;
+    
+}
+
+TreeNode* successor( TreeNode* root, int x ) {
+
+    TreeNode* p;
+    TreeNode* b = treeSearch( root, x );
+
+    if ( b == nullptr ){ 
+        return nullptr; 
+    }
+
+    if ( b->right != nullptr ) {
+        p = treeMin( b->right );
+        return p;
+    } 
+
+    p = b->parent;
+
+    while( p != nullptr && b == p->right ) {
+        b = p;
+        p = p->parent;
+    }
+    return p;
+}
+TreeNode* predecessor( TreeNode* root, int x ) {
+
+    TreeNode* p;
+    TreeNode* b = treeSearch( root, x );
+
+    if ( b == nullptr ){ 
+        return nullptr; 
+    }
+
+    if ( b->left != nullptr ) {
+        p = treeMax( b->left );
+        return p;
+    } 
+
+    p = b->parent;
+
+    while( p != nullptr && b == p->left ) {
+        b = p;
+        p = p->parent;
+    }
     return p;
 }
 
-/*
-template <class T>
-void* BinTree<T>::successor( T val ) {
+// Unsafe
+void transplant( TreeNode*& root, TreeNode*& targetNode, TreeNode*& subTreeRoot ) {
 
-    NODEPTR p = search( val );
-    NODEPTR q = p->right;
+    if ( targetNode->parent == nullptr) {
+        root = subTreeRoot;
 
-    if ( q == nullptr ) {
-        //Successor must be parent
-        std::cout << "error: successor must be parent, or does not exist in graph.\n";
-        return p;
+    } else if ( targetNode == (targetNode->parent)->left ) {
+        (targetNode->parent)->left  = subTreeRoot;
+
+    } else {
+        (targetNode->parent)->right  = subTreeRoot;
+
     }
 
-    while ( q!=nullptr ) {
-        if ( q->left != nullptr ) {
-            q = q->left;
-        } else {
-            return q;
-        }
+    if ( subTreeRoot != nullptr) {
+        subTreeRoot->parent = targetNode->parent;
+
     }
-
-    
-
 }
 
-template <class T>
-void BinTree<T>::remove( T val ) { //incomplete
+void remove( TreeNode*& root , int x ) {
 
-    NODEPTR p = search( T val );
+    TreeNode* xp = treeSearch( root, x );
+    //TreeNode* p  = nullptr;
 
-    if (p==nullptr) {
-        std::cout << "warning: value, " << val << " not found. nothing happened.\n";
-    }
+    if ( xp == nullptr ) {return;}
 
-    // Cases 
-    bool noChildren = (p->left == nullptr && p->right == nullptr);
-    bool oneChild  ;
+    // if ( xp->parent == nullptr ) {} // xp must be the root
 
-}
+    if (xp->left == nullptr) {
+        transplant( root, xp, xp->right );
+        delete xp;
+    } else if ( xp->right == nullptr ) {
+        transplant( root, xp, xp->left );
+        delete xp;
+    } else {
+        TreeNode* succx = treeMin( xp->right );
 
-*/
+        if ( succx->parent != xp ) {
+            transplant( root, succx, succx->right );
 
-template <class T>
-void BinTree<T>::list( ) { 
-    
-    if (isEmpty()) {
-        std::cout << "list: [ ]\n"; 
-    } else { 
-        std::cout << "list: [ ";
+            succx->right           = xp->right;
+            (succx->right)->parent = succx;
+        } 
+        transplant( root, xp, succx);
+        succx->left = xp->left;
+        (succx->left)->parent = succx;
         
-        root->walk();
-
-        std::cout <<  " ]\n";
+        delete xp;
     }
+}
 
+//-------------------------------------------------------------------------------------
+// Basic Displays 
+//-------------------------------------------------------------------------------------
+void displaySubTree( TreeNode* root ) {
+
+    //TreeNode*p=root;
+
+    if( root!=nullptr ) {
+        displaySubTree( root->left );
+        std::cout << root->val << ", ";
+        displaySubTree( root->right );
+    }
+}
+void displayTree( TreeNode* root ) {
+
+    //TreeNode*p=root;
+
+    std::cout << "[ ";
+    if( root!=nullptr ) {
+        displaySubTree( root->left );
+        std::cout << root->val << ", ";
+        displaySubTree( root->right );
+    }
+    std::cout << "]\n";
 }
 
 
+//-------------------------------------------------------------------------------------
+// Composite methods 
+//-------------------------------------------------------------------------------------
+TreeNode* randTree( int N_nodes ) {
 
+    //std::cout << "inr\n";
+    TreeNode* root = nullptr;
 
+    //std::cout << "inr2\n";
+    int x;
+    int rndNumCut = 100;
+
+    //std::cout << "inr3\n";
+    for ( int i = 0; i < N_nodes ; i++ ) 
+    {
+        //std::cout << i ;
+        x = rand()%rndNumCut;
+        treeInsert( root, x );
+    }
+
+    return root;
+}
 
 #endif
