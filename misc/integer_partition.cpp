@@ -7,7 +7,21 @@
 
 namespace ip {
 
-int fastApxSqrt( int n ) {
+    namespace aux {
+        void bisectionStep( int& yL, int& yR, const int& a )
+        {
+            long  yM = (long)( (yL+yR) )/2;
+            long f   = yM*yM - (long)a;
+    
+            if ( f > 0 ) { 
+                yR = (int)yM;  
+            } else {
+                yL = (int)yM;
+            }
+        }
+    }
+
+int old_fastApxSqrt( int n ) {
 
     float N  = (float) n;
     float nn = N;
@@ -24,6 +38,26 @@ int fastApxSqrt( int n ) {
 
     return m;
 }
+
+
+int fastApxSqrt(int x) {
+        
+    if ( x== 0 ) {return 0;}
+    if ( x < 4 ) {return 1;}
+    if ( x < 9 ) {return 2;}
+
+    int yL = 0;
+    int yR = x;
+
+    while ( yL+1 < yR ) 
+    {
+        aux::bisectionStep( yL, yR, x );
+        // std::cout << "( " << yL << ", " << yR << " )" << '\n';
+    }
+
+    return yL;
+}
+
 
 
 
@@ -70,8 +104,8 @@ Part intPartition_NSO( int n ) {
 
     // Construct near suboptimal integer partition
 
-    //int m = fastApxSqrt( n );
-    int m = sqrt(n);
+    int m = fastApxSqrt( n );
+    //int m = sqrt(n);
 
     Part p;
     p.m    = m;

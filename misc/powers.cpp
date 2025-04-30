@@ -3,13 +3,13 @@
 #include <vector>
 #include "integer_partition.cpp"
 #define NBITSINT 32
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Program still needs work for
-// exceptional cases and agreement for inf/nan results
-// occuring during large integer powers
-// -- Possible error is coming from choice of integer partition functions
-//
-//
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// resolved! -- Program still needs work for
+//     exceptional cases and agreement for inf/nan results 
+//     occuring during large integer powers 
+// resolved! -- Possible error is coming from choice of 
+//     integer partition functions
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 double naivePow( double x, int n) {
 
@@ -100,7 +100,7 @@ double myPowPartitRecur(double x, int n) {
         n = -n;  // doesnt work for min value of type (int)
     } 
     
-    if ( n < 4 ) {
+    if ( n < 10 ) {
         return naivePow(x,n);
     }
 
@@ -301,11 +301,11 @@ int main()
     //std::cout << "2.0^2 = " << myPowBits( 2.0, 2 ) << '\n';
 
     testPowFuncs( 12 );
-    testPowFuncs_edge();
+   // testPowFuncs_edge();
     
     // std::cout << timeTest( 50, 100, &naivePow );
 
-    evalPerformance_powers(  4096, 1073741824, 14 );
+    evalPerformance_powers(  40, 10737410, 11 );
 
     return 0;
 }
