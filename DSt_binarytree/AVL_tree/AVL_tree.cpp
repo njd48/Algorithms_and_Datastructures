@@ -8,9 +8,13 @@
 
 #include <iostream>
 
-//-------------------//
-// Unfinished        //
-//-------------------//
+//------------------------------
+// Unfinished        
+//
+// To Do: 
+//  => Implement Delete with AVL
+//
+//------------------------------
 
 class AVLTree {
 
@@ -320,8 +324,8 @@ public:
 
     // --- Basic Gets -----------------------------
     bool isEmpty() { if (root==nullptr) return true; else return false; }
-    int height() { return subTreeHeight(root); }
-    int bf() { return balanceFactor(root); }
+    int height() {   return subTreeHeight(root); }
+    int bf() {       return balanceFactor(root); }
 
     // --- Basic Methods --------------------------
     void    insert( int );

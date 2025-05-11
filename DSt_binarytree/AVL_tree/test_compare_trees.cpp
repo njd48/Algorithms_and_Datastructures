@@ -15,7 +15,6 @@ void treeInsertRandNodes( BinTree& bTree, AVLTree& aTree, int N_nodes ) {
 
     for ( int i = 0; i < N_nodes ; i++ ) 
     {
-        //std::cout << i ;
         x = (rand()%rndNumCut) - rndNumCut/2;
         bTree.insert(x);
         aTree.insert(x);

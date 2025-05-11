@@ -1,6 +1,6 @@
 
-#ifndef KDV_CALC_H
-#define KDV_CALC_H
+#ifndef KDV_SOLVER_H
+#define KDV_SOLVER_H
 
 #include <complex>
     #define complex_t std::complex<double>
@@ -74,36 +74,36 @@ RK4_solver::RK4_solver( size_t n ) {
     dx = 1. / (double)(N-1);
 }
 RK4_solver::~RK4_solver(  ) {
-    delete temp1;
-    delete k1;
-    delete k2;
-    delete k3;
-    delete k4;
+    delete[] temp1;
+    delete[] k1;
+    delete[] k2;
+    delete[] k3;
+    delete[] k4;
 }
 
 void RK4_solver::timestep( double dt, complex_t *u0, complex_t *u1 ){
 
     KdVcalcs::RHS( 0, N, dx, u0, k1 );
     
-    for( int i = 0; i<N ; i++ ){ 
+    for( size_t i = 0; i<N ; i++ ){ 
         temp1[i] = u0[i] + 0.5*dt*k1[i]; 
     }
 
     KdVcalcs::RHS( 0, N, dx, temp1, k2 );
 
-    for( int i = 0; i<N ; i++ ){ 
+    for( size_t i = 0; i<N ; i++ ){ 
         temp1[i] = u0[i] + 0.5*dt*k2[i]; 
     }
 
     KdVcalcs::RHS( 0, N, dx, temp1, k3 );
 
-    for( int i = 0; i<N ; i++ ){ 
+    for( size_t i = 0; i<N ; i++ ){ 
         temp1[i] = u0[i] + dt*k3[i]; 
     }
 
     KdVcalcs::RHS( 0, N, dx, temp1, k4 );
 
-    for( int i = 0; i<N ; i++ ){ 
+    for( size_t i = 0; i<N ; i++ ){ 
         u1[i] = u0[i] + (dt/6.0)*( k1[i] + 2.0*k2[i] + 2.0*k3[i] + k4[i] ) ; 
     }
 }

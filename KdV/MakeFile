@@ -2,10 +2,11 @@ IDIR=./
 CXX=g++
 CXXFLAGS=-I$(IDIR) -Wall -Wextra -pedantic-errors -O2 -pthread
 
+.PHONY: clean
 
 test: test_KdV.cpp
-	$(CXX) -o test.exe $(CXXFLAGS) test_KdV.cpp
-
+	$(CXX) test_KdV.cpp -o test.exe $(CXXFLAGS) 
 	./test.exe
 
-.PHONY: clean
+clean:
+	rm -f test.exe

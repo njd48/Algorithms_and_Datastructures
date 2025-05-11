@@ -22,7 +22,10 @@ class Graph {
 
         Matrix<int> adj;
 
+        // Node properties for depth first search.
         std::vector<Color> attr;
+        std::vector<int> discTime;
+        std::vector<int> finTime;
 
     public:
         Graph();
@@ -40,6 +43,10 @@ class Graph {
         
         void nodeCol( int, Color );
         Color nodeCol( int );
+        void nodeDiscTime( int, int );
+        int nodeDiscTime( int );
+        void nodeFinTime( int, int );
+        int nodeFinTime( int );
 
         // examining methods
         int getNumVerts(){ return V; };
@@ -66,7 +73,10 @@ Graph::~Graph(){
 int Graph::resize( int newsize ){
     V = newsize;
     adj.resize(V,V);
+
     attr.resize(V);
+    discTime.resize(V);
+    finTime.resize(V);
     //attr[V] = white;
     return V;
 };
@@ -74,7 +84,10 @@ int Graph::resize( int newsize ){
 int Graph::addNode(){
     V++;
     adj.resize(V,V);
+
     attr.resize(V);
+    discTime.resize(V);
+    finTime.resize(V);
     //attr[V] = white;
     return V;
 };
@@ -150,7 +163,18 @@ void Graph::nodeCol( int i, Color colval ) {
 Color Graph::nodeCol( int i ) {
     return attr[i];
 }
-
+void Graph::nodeDiscTime( int i, int t ){
+    discTime[i] = t;
+};
+int Graph::nodeDiscTime( int i ){
+    return discTime[i];
+};
+void Graph::nodeFinTime( int i, int t ){
+    finTime[i] = t;
+};
+int Graph::nodeFinTime( int i ){
+    return finTime[i];
+};
 
 //=============================================================================
 
