@@ -29,6 +29,9 @@
 *.a
 *.lib
 
+#
+fftw-3.3.10
+
 # Executables
 *.exe
 *.out
