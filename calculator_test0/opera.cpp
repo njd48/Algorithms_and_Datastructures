@@ -41,6 +41,7 @@ public:
     Operation getOperation()    { return m_operation; }
     std::string showOperation() { return operationToString( m_operation ); }
     Opera* next()               { return m_next; }
+    bool hasNext()              { return !(m_next==nullptr); }
     Opera* prev()               { return m_prev; }
 
     void changeOperation( Operation a ){ m_operation = a; }
@@ -77,54 +78,60 @@ public:
         return q;
     }
 
+    void restitch(){
+        if (m_next != nullptr) 
+        {
+            Opera* next = m_next;
+            m_next      = next->m_next;  
+            if (m_next != nullptr){
+                m_next->m_prev = this;
+            }                  
+            //delete next;
+        }        
+    }
+
     void resolve(){
 
         // Opera class absorbs its neighbor into itself,
         // deletes the neighbor,
         // and replaces it with its neighbor's neighbor.
+        // 
+        // if m_peration is not admissible, does nothing
 
-        Opera* next = m_next;
-
-        if ( next == nullptr ){
+        if ( m_next == nullptr ){
             return;
         }
 
         switch (m_operation) {
-            case nothing:  
-                break;
 
             case plus:     
-                m_val       = m_val + next->m_val; 
-                m_operation = next->m_operation;
+                m_val       = m_val + m_next->m_val; 
+                m_operation = m_next->m_operation;
+                restitch();
                 break;
                 
             case minus:    
-                m_val       = m_val - next->m_val; 
-                m_operation = next->m_operation;
+                m_val       = m_val - m_next->m_val; 
+                m_operation = m_next->m_operation;
+                restitch();
                 break;
 
             case times:    
-                m_val       = m_val * next->m_val; 
-                m_operation = next->m_operation;
+                m_val       = m_val * m_next->m_val; 
+                m_operation = m_next->m_operation;
+                restitch();
                 break;
 
             case divideby: 
-                m_val       = m_val / next->m_val; 
-                m_operation = next->m_operation;
+                m_val       = m_val / m_next->m_val; 
+                m_operation = m_next->m_operation;
+                restitch();
                 break;
 
             default:
                 break;
         }
-
-        m_next         = next->m_next;
-        if (m_next != nullptr ){
-            m_next->m_prev = this;
-        }
-        delete next;
-
     }
-
 };
 
 #endif

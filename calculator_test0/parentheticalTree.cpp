@@ -30,6 +30,7 @@ public:
     void invalidate();
 
     void displayGraph();
+    void displayGraphPlus();
 
 };
 
@@ -116,6 +117,31 @@ void treeNode::displayGraph() {
     }
     if ( valid ) {
         std::cout << ')';
+    }
+    
+
+}
+
+void treeNode::displayGraphPlus() {
+
+    std::cout << '(';
+
+    Opera* p = this->val;
+    Operation op = p->getOperation();
+    if ( valid ) {        
+        if ( isCParen(op) ) {
+            std::cout << p->getVal() << operationToString(op) ;
+        } else {
+            std::cout << p->getVal() << operationToString(op) << "...";
+        }
+    }
+    for ( auto c : children ) {
+        c->displayGraphPlus();
+    }
+    if ( valid ) {
+        if ( !isCParen(op) ) {
+            std::cout << ')';
+        }
     }
     
 

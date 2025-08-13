@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+    #include "utils.cpp"
 #include "operations.cpp"
 #include "opera.cpp"
 #include "parentheticalTree.cpp"
@@ -27,7 +28,7 @@ void constructParentheticalTree( treeNode* t, Opera* p ) {
 
         if ( isOParen( p->getOperation() ) ) {
 
-            t = t->addChild( p );
+            t = t->addChild( p->next() );
 
         } else if ( isCParen( p->getOperation() ) ) {
             
@@ -48,24 +49,25 @@ void resolveOperation( OperationGroup grp, Opera* node , bool& flag ){
     Opera* p = node;
     OperationGroup g;
 
-    while ( p != nullptr  ) {
+    //renderOperaChain(p);
+
+    while ( p->hasNext() ) {
 
         if ( isCParen( p->getOperation() ) ){
             return;
         }
 
         g = operationGroup( p->getOperation() );
-
         if ( g == grp ) {
-
+            
             p->resolve();
             flag = true;
-
+            
+            //renderOperaChain(p);
         } else {
-
             p = p->next();
-
         }        
+
     }
 }
 
@@ -74,9 +76,9 @@ void resolveParenthesis(  Opera* p, bool& flag ){
 
     Opera* q = p->prev();
 
-    std::cout << p->getVal() << q->showOperation() << '\n';
-    std::cout << isCParen( p->getOperation() ) << '\n';
-    std::cout << isOParen( q->getOperation() ) << '\n';
+    //std::cout << p->getVal() << p->showOperation() << '\n';
+    //std::cout << isCParen( p->getOperation() ) << '\n';
+    //std::cout << isOParen( q->getOperation() ) << '\n';
 
     if ( isCParen( p->getOperation() ) ) {
         if ( q != nullptr  ) {
@@ -125,6 +127,7 @@ void fullResolve(Opera* headNode){
     //
     Opera* p;
     bool validP;
+    int testIterator =  0;
     while ( treeHead->nChildren() > 0 ) {
 
         chainAltered = false;
@@ -135,14 +138,14 @@ void fullResolve(Opera* headNode){
         //     std::cout << "Error: invalid parenthetical encountered. exiting.\n";
         //     return;
         // }
+        std::cout << "pass " << testIterator << ' ' << p << '\n';
 
-        std::cout << p << '\n';
         resolveOperation( multDiv,  p, chainAltered  );
         renderOperaChain( headNode );
-        std::cout << p << '\n';
+        //std::cout << p << '\n';
         resolveOperation( addSubtr, p, chainAltered );
         renderOperaChain( headNode );
-        std::cout << p << '\n';
+        //std::cout << p << '\n';
         resolveParenthesis( p, chainAltered );
         renderOperaChain( headNode );
 
@@ -151,6 +154,7 @@ void fullResolve(Opera* headNode){
             renderOperaChain( headNode );
             return;
         }
+        testIterator++;
     }
 
     resolveExpression( headNode, chainAltered );

@@ -30,7 +30,7 @@ int main() {
         constructParentheticalTree( treeHead[i], chainHead[i] );
 
         std::cout << "Parenthetical Tree: ";
-        treeHead[i]->displayGraph();
+        treeHead[i]->displayGraphPlus();
         std::cout << '\n';
 
         // Test tree's ability to pop
@@ -45,7 +45,7 @@ int main() {
             //if (validP) { std::cout << "true " << '\n'; }
             //else{         std::cout << "false" << '\n';}
             std::cout << "Parenthetical Tree: ";
-            treeHead[i]->displayGraph();
+            treeHead[i]->displayGraphPlus();
             std::cout << '\n';
         }
 
