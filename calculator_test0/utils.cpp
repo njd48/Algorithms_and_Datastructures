@@ -8,6 +8,7 @@
 #include <algorithm>
 #include "operations.cpp"
 #include "opera.cpp"
+#include "parentheticalTree.cpp"
 
 #define RANDRANGE 100
 
@@ -16,6 +17,7 @@ Operation randOp()   { return static_cast<Operation>( 1+rand()%4 );  }
 Opera*  randomOperaChain( int N );
 void renderOperaChain( Opera* );
 void renderOperaChain( Opera*, Opera* );
+void renderParensAndOpera( Opera*, treeNode* );
 
 
 Opera* randomOperaChain( int N ) {
@@ -149,6 +151,13 @@ void renderOperaChain( Opera* x, Opera* tail ){
     }
 
     std::cout << '\n';
+}
+
+
+
+void renderParensAndOpera( Opera* chainHead, treeNode* treeHead ){
+
+    
 }
 
 
