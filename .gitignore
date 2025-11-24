@@ -23,6 +23,9 @@
 *.mod
 *.smod
 
+# Debugs
+.vscode
+
 # Compiled Static libraries
 *.lai
 *.la
